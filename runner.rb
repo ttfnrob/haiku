@@ -31,7 +31,7 @@ def haiku_search(incoming, arpabetfile)
     syls_per_line = [5,7,5]
     haiku = []
     success = true
-    bad_ending_words = ['THE', 'AND', 'OR', 'A', 'OF', 'TO', 'BUT']
+    bad_ending_words = ['THE', 'AND', 'OR', 'A', 'OF', 'TO', 'BUT', 'TO']
 
     syls_per_line.each do |syl|
       remaining_syl = syl
@@ -61,14 +61,13 @@ def haiku_search(incoming, arpabetfile)
   end
 end
 
-
-url = 'http://export.arxiv.org/rss/astro-ph'
+url = 'http://feeds.bbci.co.uk/news/rss.xml?edition=int'
 xml_data = Net::HTTP.get_response(URI.parse(url)).body
 
-data = XmlSimple.xml_in(xml_data)
+data = XmlSimple.xml_in(xml_data)["channel"].first
 
 data['item'].each_with_index do |paper, index|
-  abstract = paper['description'].first['content']
+  abstract = paper['description'].first
   url = paper['link'].first
     
   haikus = haiku_search(abstract, 'cmudict.txt')
